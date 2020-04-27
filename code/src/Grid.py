@@ -11,7 +11,7 @@ class Grid(object):
                 self.topLevelCells[i][j] = Cell(minX+xIncrement*i,minY+yIncrement*j,xIncrement,yIncrement,str(i)+","+str(j))
         self.posInListForm = {}
         for i in range(len(self.getCells())):
-            posInListForm[self.getCells()[i]] = i
+            self.posInListForm[self.getCells()[i]] = i
 
     def getN(self):
         return len(self.topLevelCells)
@@ -34,7 +34,7 @@ class Grid(object):
         tbR = []
         for i in range(len(self.topLevelCells)):
             for j in range(len(self.topLevelCells)):
-                tbR.append(topLevelCells[i][j])
+                tbR.append(self.topLevelCells[i][j])
         return tbR
 
     def getPosInListForm(self, c1):
@@ -42,6 +42,10 @@ class Grid(object):
     
     def getCellMatrix(self):
         return self.topLevelCells
+
+    def getCellByName(self,name:str):
+        xy = name.split(',')
+        return self.topLevelCells[int(xy[0])][int(xy[1])]
 
     def areAdjacent(self, c1, c2):
         c1x = -1
@@ -61,7 +65,7 @@ class Grid(object):
                     c2y = j
                     c2found = True
 
-        if (c1found == false or c2found == false):
+        if (c1found == False or c2found == False):
             print("cells not found, cannot compute adjacency")
             return False
         if (c2x == c1x+1 and c2y == c1y):
@@ -102,11 +106,11 @@ class Grid(object):
         cells = self.getCells()
         tbr = []
         for i in cells:
-            if(this.areAdjacent(i,c1)):
+            if(self.areAdjacent(i,c1)):
                 tbr.append(i)
         return tbr
 
-    def giveInterpolateRoute(self, start, end):
+    def giveInterpolatedRoute(self, start, end):
         startx = -1
         starty = -1
         endx = -1
@@ -148,6 +152,6 @@ class Grid(object):
         return tbr
 
     def findShortestLengthBetween(self, start, end):
-        shortestPath = self.giveInterpolateRoute(start,end)
+        shortestPath = self.giveInterpolatedRoute(start,end)
         shortestPath.append(end)
         return len(shortestPath)

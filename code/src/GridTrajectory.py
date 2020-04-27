@@ -43,7 +43,7 @@ class GridTrajectory(object):
                 if(current == nextc or g.areAdjacent(current,nextc)):
                     finTrajCells.append(current)
                 else:
-                    finTrajCells.addAll(g.giveInterpolatedRoute(current,nextc))
+                    finTrajCells.extend(g.giveInterpolatedRoute(current,nextc))
             finTrajCells.append(self.trajCells[len(self.trajCells)-1])
             self.trajCells = finTrajCells
 
@@ -68,6 +68,12 @@ class GridTrajectory(object):
 
     def getCells(self) -> List[Cell]:
         return self.trajCells
+
+    def getLength(self):
+        return len(self.trajCells)
+
+    def getTrajName(self):
+        return self.trajCells[0].getName()+"->"+self.trajCells[-1].getName()
 
     def passesThrough(self, c:Cell):
         for i in self.trajCells:

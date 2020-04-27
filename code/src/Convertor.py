@@ -5,6 +5,7 @@ import time
 from GridTrajectory import GridTrajectory
 from Trajectory import Trajectory
 from GowallaData import GowallaData
+from TimeDistribution import TimeDistribution
 from Grid import Grid
 from Cell import Cell
 
@@ -20,7 +21,7 @@ def convertTrajToGridTraj(origDB, g:Grid, interp:bool, epsilon:float = None, unu
     for c in g.getCells():
         cellDensities[c] = 0
     for t in tbr:
-        for c in t.getCells:
+        for c in t.getCells():
             cellDensities[c] = cellDensities[c]+1/len(t.getCells())
     ld = np.random.laplace(0,1/epsilon)
     for c in g.getCells():
@@ -32,13 +33,13 @@ def convertTrajToGridTraj(origDB, g:Grid, interp:bool, epsilon:float = None, unu
         c.divideFurther(cellDensities[c],epsilon+unusedEpsilon,origDB)
     return tbr
 
-def convertGridTrajToTraj(input,g):
+def convertGridTrajToTraj(input,tb:TimeDistribution):
     tbr = []
     for t in input:
         out = Trajectory()
         cellsForConversion = t.getCells()
         for c in cellsForConversion:
-            out.addPoint(c.sampleRandomPoint())
+            out.addPoint(c.sampleRandomPoint(tb.sample(cellsForConversion.index(c))))
         tbr.append(out)
     return tbr
 
