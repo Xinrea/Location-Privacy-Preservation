@@ -15,14 +15,19 @@ class GowallaData(object):
         self.dfc = pd.DataFrame(index=[],columns=[])
         self.feature_map = {}
     
-    def read_checkin_file(self, filename, items):
+    def read_checkin_file(self, filename, items = ['uid','utc','lat','lon','lid']):
         print('Checkin Filename:',filename)
         self.dfc = pd.read_table(filename,header=None)
         self.dfc.columns = items
-        return True
+        self.uid_list = self.dfc['uid'].unique()
+    
+    def getGowallaData(self):
+        return self.dfc
+    
+    def getUidlist(self):
+        return self.uid_list
     
     def gen_feature(self):
-        self.uid_list = self.dfc['uid'].unique()
         self.feature_list = []
         for i in self.uid_list:
             self.feature_map[i] = UsrFeature(self.dfc.loc[self.dfc['uid']==i])
@@ -57,8 +62,7 @@ if __name__ == '__main__':
     # Process Checkin Data
     gowalla = GowallaData()
     default_checkin_file = '/home/xinrea/location-privacy/Location-Privacy-Preservation/datasets/Gowalla20w.txt'
-    items_checkin = ['uid','utc','lat','lon','lid']
-    gowalla.read_checkin_file(default_checkin_file, items_checkin)
+    gowalla.read_checkin_file(default_checkin_file)
     gowalla.gen_feature()
     gowalla.divide_user()
 

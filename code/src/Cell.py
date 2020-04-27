@@ -41,7 +41,7 @@ class Cell(object):
         else:
             random = random.uniform(0,1)
             seenSoFar = 0.0
-            for(i = 0; i < len(self.leve2densities); i = i + 1):
+            for i in len(self.leve2densities):
                 seenSoFar = seenSoFar + self.leve2densities[i]
                 if (seenSoFar >= random):
                     myAdaptiveCell = self.leve2cells[i]
@@ -59,19 +59,19 @@ class Cell(object):
         xIncrement = (self.maxX-self.minX)/lvl2cell
         yIncrement = (self.maxY-self.minY)/lvl2cell
         densities = []
-        for(i = 0; i < lvl2cell; i = i + 1):
-            for(j = 0; j < lvl2cell; j = j + 1):
+        for i in range(lvl2cell):
+            for j in range(lvl2cell):
                 lvl2cellSelf = Cell(self.minX+xIncrement*i, minY+yIncrement*j,xIncrement,yIncrement,str(i)+","+str(j))
                 lvl2cellDensity = 0
-                for(t in db):
-                    for(k = 0; k < t.getSize(); k = k+1):
+                for t in db:
+                    for k in range(t.getSize()):
                         if(lvl2cellSelf.inCell(t.getPoint(k))):
                             lvl2cellDensity = lvl2cellDensity + 1
                             break
         self.leve2cells.append(lvl2cellSelf)
         densities.append(lvl2cellDensity)
         totoaldensity = 0
-        for (d in densities):
+        for d in densities:
             totoaldensity = totoaldensity + d
-        for (i = 0; i < len(densities); i = i+1):
+        for i in range(len(densities)):
             self.leve2densities.append(densities[i]/totoaldensity)

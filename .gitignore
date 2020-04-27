@@ -1,5 +1,7 @@
 datasets/
 docs/samples/
 references/
+code/src/third
+.vscode
 *.mp4
 __pycache__
