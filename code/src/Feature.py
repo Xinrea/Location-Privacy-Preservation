@@ -18,6 +18,12 @@ class UsrFeature(object):
         
         # Move Range Radius
         self.radius = range_radius(usrData)
+        # k for adjust feature proportion
+        k = np.array([1,1])
+        self.feature = np.array([self.distance,self.radius])*k
+
+    def __sub__(self, other):
+        return np.sum(np.abs(self.feature-other.feature))
 
     def get_distance(self):
         return self.distance
