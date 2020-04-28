@@ -19,7 +19,18 @@ class TimeDistribution(object):
                 else:
                     self.timeCount[i].append(p.getTime())
                 count += 1
-        print("[TimeDistribution]Get Sample Number",count)
+        # print("[TimeDistribution]Get Sample Number",count)
+
+    def addBias(self,other):
+        tc = other.timeCount
+        for s,t in tc.items():
+            if (s in self.timeCount):
+                self.timeCount[s].extend(t)
+            else:
+                self.timeCount[s] = t
 
     def sample(self, step:int):
+        if (step not in self.timeCount):
+            for s,t in self.timeCount.items():
+                return t[random.randint(0,len(t)-1)]
         return self.timeCount[step][random.randint(0,len(self.timeCount[step])-1)]

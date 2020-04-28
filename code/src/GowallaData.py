@@ -4,6 +4,7 @@
 import numpy as np
 import pandas as pd
 import scipy
+import time
 import scipy.cluster.hierarchy as sch
 from matplotlib import pyplot as plt
 
@@ -26,27 +27,33 @@ class GowallaData(object):
     
     def getUidlist(self):
         return self.uid_list
+
+    def getCluster(self):
+        return self.cluster_result
     
     def gen_feature(self):
+        btime = time.time()
         self.feature_list = []
         for i in self.uid_list:
             self.feature_map[i] = UsrFeature(self.dfc.loc[self.dfc['uid']==i])
             self.feature_list.append(self.feature_map[i].feature)
+        etime = time.time()
+        print("GowallaData.gen_feature:",etime-btime)
 
     def divide_user(self):
+        btime = time.time()
         disMat = sch.distance.pdist(self.feature_list,'cityblock')
-        Z = sch.linkage(disMat,method='average')
-        p = sch.dendrogram(Z)
-        plt.savefig('t.png')
+        Z = sch.linkage(disMat,method='single')
         kmember = 2
-        init_num = len(self.uid_list)//kmember
+        init_num = len(self.uid_list)# kmember
         self.cluster_result = []
         while True:
-            slef.cluster_result = sch.fcluster(Z,init_num,criterion='maxclust')
-            if (CheckCluster(cluster_result,init_num,kmember)):
+            self.cluster_result = sch.fcluster(Z,init_num,criterion='maxclust')
+            if (CheckCluster(self.cluster_result,init_num,kmember)):
                 break
             init_num = init_num - 1
-        print(self.cluster_result)
+        etime = time.time()
+        print("GowallaData.divide_user:",etime-btime)
         
 def CheckCluster(result, number, k):
     r = list(result)

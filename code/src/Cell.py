@@ -16,6 +16,14 @@ class Cell(object):
         self.leve2cells = []
         self.leve2densities = []
 
+    def __eq__(self,item):
+        if isinstance(item,self.__class__):
+            return self.name == item.name
+        return False
+
+    def __hash__(self):
+        return hash(self.name)
+
     def inCell(self,xCoord, yCoord = None):
         x = xCoord
         y = yCoord

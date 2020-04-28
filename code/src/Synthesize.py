@@ -57,5 +57,5 @@ if __name__ == "__main__":
     Gowalla = GowallaData()
     Gowalla.read_checkin_file('/home/Gowalla_sample.txt')
     originDB = Convertor.convertGowallaToTraj(Gowalla)
+    print(Gowalla.getUidlist())
     SynTraj(originDB[0],1)
-    

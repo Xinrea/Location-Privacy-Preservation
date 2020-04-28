@@ -31,6 +31,9 @@ class Trajectory(object):
     def getPoint(self,pos):
         return self.points[pos]
 
+    def getPoints(self):
+        return self.points
+
     def getMinXCoord(self):
         currMin = self.points[0].getX()
         for p in self.points:

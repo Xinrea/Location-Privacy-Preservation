@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import overload_function
 import time
+from typing import List
 from GridTrajectory import GridTrajectory
 from Trajectory import Trajectory
 from GowallaData import GowallaData
@@ -44,13 +45,14 @@ def convertGridTrajToTraj(input,tb:TimeDistribution):
     return tbr
 
 def convertGowallaToTraj(gowalla:GowallaData):
+    btime = time.time()
     tbr = {}
     rawData = gowalla.getGowallaData()
     uidlist = gowalla.getUidlist()
     for u in uidlist:
         traj = []
         urawData = rawData.loc[rawData['uid'] == u]
-        urawData = urawData.iloc[::-1]
+        urawData = urawData.sort_values(by=['utc'])
         # 'uid','utc','lat','lon','lid'
         lastDay = None
         oneTraj = Trajectory()
@@ -70,9 +72,37 @@ def convertGowallaToTraj(gowalla:GowallaData):
                 oneTraj.addCoordinates(line['lat'],line['lon'],t)
         traj.append(oneTraj)
         tbr[u] = traj
+    etime = time.time()
+    print("Convertor.convertGowallaToTraj:",etime-btime)
     return tbr
 
+def convertTrajToFile(db,filename:str):
+    # items = ['uid','utc','lat','lon','lid']
+    dlist = {}
+    uidCol = []
+    utcCol = []
+    latCol = []
+    lonCol = []
+    for uid,d in db.items():
+        for t in d:
+            points = t.getPoints()
+            for p in points:
+                uidCol.append(uid)
+                utcCol.append(time.strftime("%Y-%m-%dT%H:%M:%SZ",p.getTime()))
+                latCol.append(p.getX())
+                lonCol.append(p.getY())
+    dlist['uid'] = uidCol
+    dlist['utc'] = utcCol
+    dlist['lat'] = latCol
+    dlist['lon'] = lonCol
+    df = pd.DataFrame(dlist)
+    df.to_csv(filename,index=False)
 
+def convertDbToList(db):
+    tbr = []
+    for uid,d in db.items():
+        tbr.extend(d)
+    return tbr
 
 if __name__ == "__main__":
     Gowalla = GowallaData()

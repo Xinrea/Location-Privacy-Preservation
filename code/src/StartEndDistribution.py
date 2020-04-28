@@ -17,7 +17,11 @@ class StartEndDistribution(object):
             self.startCount.append(cells[0].toString())
             self.endCount.append(cells[-1].toString())
             count += 1 
-        print("[StartEndDistribution]Get Sample Number",count)
+        # print("[StartEndDistribution]Get Sample Number",count)
+
+    def addBias(self,other):
+        self.startCount.extend(other.startCount)
+        self.endCount.extend(other.endCount)
 
     def sample(self):
         start = self.startCount[random.randint(0,len(self.startCount)-1)]

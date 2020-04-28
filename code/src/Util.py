@@ -4,6 +4,9 @@ from GridTrajectory import GridTrajectory
 from Grid import Grid
 from Cell import Cell
 import random
+import numpy as np
+import hashlib
+import time
 
 def getDataBoundaries(db:List[Trajectory]):
     dataMinX = float('inf')
@@ -92,12 +95,26 @@ def precomputeMarkov(oneStep,maxSteps):
     return tbr
 
 def matrixMultiply(a,b):
-    c = [[0]*len(b[0]) for _ in range(len(a))]
-    for i in range(len(a)):
-        for j in range(len(b[0])):
-            for k in range(len(a[0])):
-                c[i][j] += a[i][k]*b[k][j]
-    return c
+    am = np.mat(a)
+    bm = np.mat(b)
+    c = am*bm
+    return c.tolist()
+    # c = [[0]*len(b[0]) for _ in range(len(a))]
+    # for i in range(len(a)):
+    #     for j in range(len(b[0])):
+    #         for k in range(len(a[0])):
+    #             c[i][j] += a[i][k]*b[k][j]
+    # return c
+
+def md5Time():
+    m = hashlib.md5()
+    m.update(str(time.time()).encode())
+    return m.hexdigest()
+
+def md5Str(s):
+    m = hashlib.md5()
+    m.update(s.encode())
+    return m.hexdigest()
 
 if __name__ == "__main__":
     import Convertor

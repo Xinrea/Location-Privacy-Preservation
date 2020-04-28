@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>面向特征的位置数据隐私保护</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-fileinput@5.0.8/css/fileinput.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-fileinput@5.0.8/js/fileinput.min.js"></script>
+    </head>
+    <body>
+        <div class="row">
+            <div class="col"></div>
+            <div class="col">
+                <div class="card" style="margin-top: 200px;">
+                    <div class="card-header">位置数据导入&设置</div>
+                    <div class="card-body">
+                        希望保留的特征：
+                        <form action="/" method="POST" enctype="multipart/form-data">
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                  <input name='op' type="checkbox" class="form-check-input" value="distance">移动距离
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                  <input name='op' type="checkbox" class="form-check-input" value="pattern">移动模式
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                  <input name='op' type="checkbox" class="form-check-input" value="startpos">最常出发位置
+                                </label>
+                            </div>
+                            <div class="custom-file" style="margin-top:20px;">
+                                <input name="file" id="file" type="file">
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="float: right;">提交</button>
+                        </form>
+                    </div> 
+                </div>
+            </div>
+            <div class="col"></div>
+        </div>
+        
+    </body>
+</html>
