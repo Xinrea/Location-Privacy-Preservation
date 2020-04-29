@@ -45,7 +45,6 @@ def convertGridTrajToTraj(input,tb:TimeDistribution):
     return tbr
 
 def convertGowallaToTraj(gowalla:GowallaData):
-    btime = time.time()
     tbr = {}
     rawData = gowalla.getGowallaData()
     uidlist = gowalla.getUidlist()
@@ -72,8 +71,6 @@ def convertGowallaToTraj(gowalla:GowallaData):
                 oneTraj.addCoordinates(line['lat'],line['lon'],t)
         traj.append(oneTraj)
         tbr[u] = traj
-    etime = time.time()
-    print("Convertor.convertGowallaToTraj:",etime-btime)
     return tbr
 
 def convertTrajToFile(db,filename:str):

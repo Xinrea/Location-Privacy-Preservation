@@ -1,9 +1,9 @@
 datasets/
 docs/samples/
 references/
-code/src/third
 code/src/app/processed/*
 code/src/app/upload/*
 .vscode
 *.mp4
+*.csv
 __pycache__

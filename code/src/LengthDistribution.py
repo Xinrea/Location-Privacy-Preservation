@@ -8,7 +8,7 @@ from GridTrajectory import GridTrajectory
 from Grid import Grid
 
 class LengthDistribution(object):
-    def __init__(self,inputDB:List[GridTrajectory],grid:Grid,eps:float):
+    def __init__(self,inputDB:List[GridTrajectory],grid:Grid,eps:float=0):
         self.lengthCount = {}
         self.minL = sys.maxsize
         self.maxL = -sys.maxsize

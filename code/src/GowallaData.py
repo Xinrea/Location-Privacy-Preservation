@@ -12,13 +12,17 @@ from Feature import UsrFeature
 
 class GowallaData(object):
     def __init__(self):
-        print('GowallaData Init')
         self.dfc = pd.DataFrame(index=[],columns=[])
         self.feature_map = {}
     
     def read_checkin_file(self, filename, items = ['uid','utc','lat','lon','lid']):
         print('Checkin Filename:',filename)
         self.dfc = pd.read_table(filename,header=None)
+        self.dfc.columns = items
+        self.uid_list = self.dfc['uid'].unique()
+
+    def load_from_dfc(self,dfc,items = ['uid','utc','lat','lon','lid']):
+        self.dfc = dfc
         self.dfc.columns = items
         self.uid_list = self.dfc['uid'].unique()
     
@@ -32,16 +36,12 @@ class GowallaData(object):
         return self.cluster_result
     
     def gen_feature(self):
-        btime = time.time()
         self.feature_list = []
         for i in self.uid_list:
             self.feature_map[i] = UsrFeature(self.dfc.loc[self.dfc['uid']==i])
             self.feature_list.append(self.feature_map[i].feature)
-        etime = time.time()
-        print("GowallaData.gen_feature:",etime-btime)
 
     def divide_user(self):
-        btime = time.time()
         disMat = sch.distance.pdist(self.feature_list,'cityblock')
         Z = sch.linkage(disMat,method='single')
         kmember = 2
@@ -52,8 +52,6 @@ class GowallaData(object):
             if (CheckCluster(self.cluster_result,init_num,kmember)):
                 break
             init_num = init_num - 1
-        etime = time.time()
-        print("GowallaData.divide_user:",etime-btime)
         
 def CheckCluster(result, number, k):
     r = list(result)

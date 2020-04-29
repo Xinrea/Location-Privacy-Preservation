@@ -2,8 +2,63 @@
 <html>
     <head>
         <title>处理结果 - {{id}}</title>
+		<style type="text/css">
+			/*表格样式*/			
+			table {
+				width: 50%;
+				background: #ccc;
+				margin: 5px auto;
+				border-collapse: collapse;
+			}				
+			th,td {
+				height: 25px;
+				line-height: 25px;
+				text-align: center;
+				border: 1px solid #ccc;
+			}		
+			th {
+				background: #eee;
+				font-weight: normal;
+			}		
+			tr {
+				background: #fff;
+			}			
+			td a {
+				color: #06f;
+				text-decoration: none;
+			}		
+			td a:hover {
+				color: #06f;
+				text-decoration: underline;
+			}
+            .download {
+                position: absolute;
+                left:50%;
+                top: 20%;
+                transform: translate(-50%, -50%);
+            }
+        </style>
     </head>
     <body>
-        <a href="/download?id={{rfile}}">点击下载处理后的数据</a>
+        <table>
+            <tr>
+                <th>Method</th>
+                <th>Runtime</th>
+                <th>DiameterError</th>
+                <th>DistanceError</th>
+                <th>QueryError</th>
+                <th>Loc.Kendall-Tau</th>
+            </tr>
+            {% for row in eva%}
+            <tr>
+                {% for i in row%}
+                <td>{{i}}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="download">
+            <a href="/download?id={{rfile}}">点击下载处理后的数据</a>
+        </div>
     </body>
 </html>

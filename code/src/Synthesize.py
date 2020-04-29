@@ -9,7 +9,7 @@ from GowallaData import GowallaData
 import Util
 import Convertor
 
-def SynTraj(originalDB:List[Trajectory], totalEpsilon:float) -> List[Trajectory]:
+def SynTraj(originalDB:List[Trajectory], totalEpsilon:float, options:List,blockDistribution) -> List[Trajectory]:
     interp = True
     cellCount = 6
     budgetDistnWeights = [0.05,0.35,0.50,0.10]
@@ -22,8 +22,14 @@ def SynTraj(originalDB:List[Trajectory], totalEpsilon:float) -> List[Trajectory]
     dbGrid = Convertor.convertTrajToGridTraj(originalDB, grid, interp,budgetDistnWeights[0]*totalEpsilon, (1.0-budgetDistnWeights[0])*totalEpsilon)
     markovTransitionProbs = Util.extractMarkovProbs(dbGrid,grid,budgetDistnWeights[1]*totalEpsilon)
     lengthDistribution = LengthDistribution(dbGrid,grid,budgetDistnWeights[2]*totalEpsilon)
-    timeDistribution = TimeDistribution(originalDB)
+    if (options[0] == 0):
+        lengthDistribution.addBias(blockDistribution[0])
     startendDistribution = StartEndDistribution(dbGrid)
+    if (options[1] == 0):
+        startendDistribution.addBias(blockDistribution[1])
+    timeDistribution = TimeDistribution(originalDB)
+    if (options[2] == 0):
+        timeDistribution.addBias(blockDistribution[2])
     synGridDB = DoSynTraj(grid,markovTransitionProbs,timeDistribution,startendDistribution,lengthDistribution,len(originalDB))
     synDB = Convertor.convertGridTrajToTraj(synGridDB,timeDistribution)
     return synDB
