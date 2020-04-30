@@ -40,28 +40,33 @@
         </style>
     </head>
     <body>
-        <table>
-            <tr>
-                <th>Method</th>
-                <th>Runtime</th>
-                <th>DiameterError</th>
-                <th>DistanceError</th>
-                <th>QueryError</th>
-                <th>Loc.Kendall-Tau</th>
-                <th>TimeError</th>
-                <th>Pos.FError</th>
-                <th>Pat.FError</th>
-            </tr>
-            {% for row in eva%}
-            <tr>
-                {% for i in row%}
-                <td>{{i}}</td>
+        <div>
+            <table>
+                <tr>
+                    <th>Method</th>
+                    <th>Runtime</th>
+                    <th>DiameterError</th>
+                    <th>DistanceError</th>
+                    <th>QueryError</th>
+                    <th>Loc.Kendall-Tau</th>
+                    <th>TimeError</th>
+                    <th>Pos.FError</th>
+                    <th>Pat.FError</th>
+                </tr>
+                {% for row in eva%}
+                <tr>
+                    {% for i in row%}
+                    <td>{{i}}</td>
+                    {% endfor %}
+                </tr>
                 {% endfor %}
-            </tr>
-            {% endfor %}
-        </table>
+            </table>
+        </div>
         <div class="download">
-            <a href="/download?id={{rfile}}">点击下载处理后的数据</a>
+            生成数据：
+            <a href="/download?id={{rfile}}">FBTS</a>
+            <a href="/download?id={{rfile}}.bls.txt">BLS</a>
+            <a href="/download?id={{rfile}}.plm.txt">PLM</a>
         </div>
     </body>
 </html>

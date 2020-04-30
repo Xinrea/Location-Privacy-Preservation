@@ -149,6 +149,8 @@ def DoProcess(infile,outfile,op=[0,0,0,0]):
     evalist.append(map(lambda x: round(x,6),(eva/cnt).tolist()))
 
     Convertor.convertTrajToFile(synDB,outfile)
+    Convertor.convertTrajToFile(ksynDB,outfile+'.dls.txt')
+    Convertor.convertTrajToFile(psynDB,outfile+'.plm.txt')
     evadfc = pd.DataFrame(evalist)
     evadfc.to_csv(outfile+'.result',index=False)
     print("Process Complete")
