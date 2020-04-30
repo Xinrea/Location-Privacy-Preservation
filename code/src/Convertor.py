@@ -14,7 +14,7 @@ def convertTrajToGridTraj(origDB, g:Grid, interp:bool, epsilon:float = None, unu
     tbr = []
     if(epsilon == None):
         for t in origDB:
-            tbr.append(GridTrajectory(t,ug,interp))
+            tbr.append(GridTrajectory(t,g,interp))
         return tbr
     for t in origDB:
         tbr.append(GridTrajectory(t,g,interp))

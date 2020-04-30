@@ -17,10 +17,10 @@ class UsrFeature(object):
                 self.distance += np.linalg.norm(p1-p2)
         
         # Move Range Radius
-        self.radius = range_radius(usrData)
+        self.radius = range_radius(lat, lon)
         # k for adjust feature proportion
-        k = np.array([1,1])
-        self.feature = np.array([self.distance,self.radius])*k
+
+        self.feature = np.array([self.distance,self.radius])
 
     def __sub__(self, other):
         return np.sum(np.abs(self.feature-other.feature))
@@ -31,9 +31,16 @@ class UsrFeature(object):
     def get_radius(self):
         return self.radius
         
-
-
-def range_radius(usrData):
-    points = usrData[['lat','lon']]
-    return 0
+def range_radius(lat, lon):
+    radius = 0
+    points = []
+    for i in range(len(lat)):
+        p = np.array(lat[i],lon[i])
+        points.append(p)
+    for i in range(len(points)):
+        for j in range(i+1,len(points)):
+            dis = np.linalg.norm(points[i]-points[j])
+            if (dis > radius):
+                radius = dis
+    return radius
 

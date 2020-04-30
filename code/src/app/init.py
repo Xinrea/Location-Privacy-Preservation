@@ -29,6 +29,10 @@ def index():
             op.append(0)
         else:
             op.append(1)
+        if ('pattern' in options):
+            op.append(0)
+        else:
+            op.append(1)
         f = request.files['file']
         base_path = path.abspath(path.dirname(__file__))
         upload = path.join(base_path,'upload/')

@@ -21,13 +21,13 @@ class LengthDistribution(object):
                 self.minL = t.getLength()
 
             if (name not in self.lengthCount):
-                self.lengthCount[name] = [t.getLength()]
+                self.lengthCount[name] = [t.getLength() if t.getLength() < 256 else 256]
             else:
-                self.lengthCount[name].append(t.getLength())
+                self.lengthCount[name].append(t.getLength() if t.getLength() < 256 else 256)
             
             count += 1
-        if (self.maxL > 100):
-            self.maxL = 100
+        if (self.maxL > 256):
+            self.maxL = 256
         # print("[LengthDistribution]Get Sample Number",count)
 
     def addBias(self,other):
@@ -35,10 +35,7 @@ class LengthDistribution(object):
         self.maxL = self.maxL if self.maxL > other.maxL else other.maxL
         lc = other.lengthCount
         for n,d in lc.items():
-            if (n in self.lengthCount):
-                self.lengthCount[n].extend(d)
-            else:
-                self.lengthCount[n] = d
+            self.lengthCount[n] = d
 
     def sample(self, start, end):
         name = start.getName()+"->"+end.getName()

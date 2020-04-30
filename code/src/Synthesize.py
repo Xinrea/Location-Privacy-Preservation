@@ -9,7 +9,7 @@ from GowallaData import GowallaData
 import Util
 import Convertor
 
-def SynTraj(originalDB:List[Trajectory], totalEpsilon:float, options:List,blockDistribution) -> List[Trajectory]:
+def SynTraj(originalDB:List[Trajectory], totalEpsilon:float, options:List,blockDistribution,blockMarkov) -> List[Trajectory]:
     interp = True
     cellCount = 6
     budgetDistnWeights = [0.05,0.35,0.50,0.10]
@@ -19,9 +19,9 @@ def SynTraj(originalDB:List[Trajectory], totalEpsilon:float, options:List,blockD
     minY = boundaries[2]
     maxY = boundaries[3]
     grid = Grid(cellCount, minX,maxX,minY,maxY)
-    dbGrid = Convertor.convertTrajToGridTraj(originalDB, grid, interp,budgetDistnWeights[0]*totalEpsilon, (1.0-budgetDistnWeights[0])*totalEpsilon)
-    markovTransitionProbs = Util.extractMarkovProbs(dbGrid,grid,budgetDistnWeights[1]*totalEpsilon)
-    lengthDistribution = LengthDistribution(dbGrid,grid,budgetDistnWeights[2]*totalEpsilon)
+    dbGrid = Convertor.convertTrajToGridTraj(originalDB, grid, interp)
+    markovTransitionProbs = Util.extractMarkovProbs(dbGrid,grid)
+    lengthDistribution = LengthDistribution(dbGrid,grid)
     if (options[0] == 0):
         lengthDistribution.addBias(blockDistribution[0])
     startendDistribution = StartEndDistribution(dbGrid)
@@ -30,6 +30,8 @@ def SynTraj(originalDB:List[Trajectory], totalEpsilon:float, options:List,blockD
     timeDistribution = TimeDistribution(originalDB)
     if (options[2] == 0):
         timeDistribution.addBias(blockDistribution[2])
+    if (options[3] == 0):
+        Util.perturbationMarkov(markovTransitionProbs,blockMarkov)
     synGridDB = DoSynTraj(grid,markovTransitionProbs,timeDistribution,startendDistribution,lengthDistribution,len(originalDB))
     synDB = Convertor.convertGridTrajToTraj(synGridDB,timeDistribution)
     return synDB
@@ -38,7 +40,7 @@ def SynTraj(originalDB:List[Trajectory], totalEpsilon:float, options:List,blockD
 def DoSynTraj(g,markovProbs,td:TimeDistribution,sed:StartEndDistribution,ld:LengthDistribution,desired:int):
     tbr = []
     # transitionMatrices = [[0]*len(markovProbs) for _ in range(len(markovProbs))]
-    transitionMatrices = Util.precomputeMarkov(markovProbs,100)
+    transitionMatrices = Util.precomputeMarkov(markovProbs,256)
     for cnt in range(desired):
         se = sed.sample()
         startCell = g.getCellByName(se[0])

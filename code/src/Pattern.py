@@ -8,7 +8,10 @@ class Pattern(object):
         return False
 
     def __hash__(self):
-        return hash(self.cellsInPattern)
+        pname = ""
+        for c in self.cellsInPattern:
+            pname += c.getName()
+        return hash(pname)
 
     def isEqual(self,other):
         if (len(self.cellsInPattern) != len(other.cellsInPattern)):

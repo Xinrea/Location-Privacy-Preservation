@@ -43,8 +43,8 @@ class GowallaData(object):
 
     def divide_user(self):
         disMat = sch.distance.pdist(self.feature_list,'cityblock')
-        Z = sch.linkage(disMat,method='single')
-        kmember = 2
+        Z = sch.linkage(disMat,method='average')
+        kmember = 10
         init_num = len(self.uid_list)# kmember
         self.cluster_result = []
         while True:

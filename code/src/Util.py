@@ -29,7 +29,7 @@ def getDataBoundaries(db:List[Trajectory]):
     tbr.append(dataMaxY)
     return tbr
 
-def extractMarkovProbs(origDBgrid:List[GridTrajectory],g:Grid,privacyBudget) -> List[List[float]]:
+def extractMarkovProbs(origDBgrid:List[GridTrajectory],g:Grid,privacyBudget=1) -> List[List[float]]:
     cells = g.getCells()
     actualCounts = [[0]*len(cells) for _ in range(len(cells))]
     for gt in origDBgrid:
@@ -42,6 +42,9 @@ def extractMarkovProbs(origDBgrid:List[GridTrajectory],g:Grid,privacyBudget) -> 
             actualCounts[thisCellIndex][nextCellIndex] = actualCounts[thisCellIndex][nextCellIndex]+1/(len(trajCells)-1)
     
     return actualCounts
+
+def perturbationMarkov(markov,bmarkov):
+    return bmarkov
 
 def printGridTraj(gdTraj):
     for i in gdTraj:

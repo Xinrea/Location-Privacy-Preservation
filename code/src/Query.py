@@ -13,7 +13,7 @@ class Query(object):
             diff = maxX-minX
         else:
             diff = maxY-minY
-        self.radius = diff/10
+        self.radius = diff/100
     
     def evaluateQueryOnTraj(self,t:Trajectory):
         for i in range(t.getSize()-1):

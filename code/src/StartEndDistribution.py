@@ -20,8 +20,8 @@ class StartEndDistribution(object):
         # print("[StartEndDistribution]Get Sample Number",count)
 
     def addBias(self,other):
-        self.startCount.extend(other.startCount)
-        self.endCount.extend(other.endCount)
+        self.startCount = other.startCount
+        self.endCount = other.endCount
 
     def sample(self):
         start = self.startCount[random.randint(0,len(self.startCount)-1)]

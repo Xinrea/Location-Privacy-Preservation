@@ -40,10 +40,34 @@ def ConstructBlockDistribution(db,uidlist:List,cluster:List):
         clusterDistribution[c] = [ld,sed,td]
     return clusterDistribution
 
+def ConstructBlockMarkov(db,uidlist:List,cluster:List):
+    interp = True
+    cellCount = 6
+    clusterDB = {}
+    clusterMarkov = {}
+    for i in range(len(uidlist)):
+        c = cluster[i]
+        d = db[uidlist[i]]
+        if (c in clusterDB):
+            clusterDB[c].extend(d)
+        else:
+            clusterDB[c] = d
+    for c,d in clusterDB.items():
+        boundaries = Util.getDataBoundaries(d)
+        minX = boundaries[0]
+        maxX = boundaries[1]
+        minY = boundaries[2]
+        maxY = boundaries[3]
+        grid = Grid(cellCount, minX,maxX,minY,maxY)
+        dbGrid = Convertor.convertTrajToGridTraj(d, grid, interp, 0.05, 0.95)
+        clusterMarkov[c] = Util.extractMarkovProbs(dbGrid,grid)
+    return clusterMarkov
 
 
-def DoProcess(infile,outfile,op):
+
+def DoProcess(infile,outfile,op=[0,0,0,0]):
     print("Process Start")
+    evanum = 8
     Gowalla = GowallaData()
     Gowalla.read_checkin_file(infile)
     Gowalla.gen_feature()
@@ -56,8 +80,9 @@ def DoProcess(infile,outfile,op):
     # method 1
     time1 = time.time()
     bd = ConstructBlockDistribution(originDB,ulist,cluster)
+    bm = ConstructBlockMarkov(originDB,ulist,cluster)
     for uid,db in originDB.items():
-        synDB[uid] = SynTraj(originDB[uid],1,op,bd[cluster[ulist.index(uid)]])
+        synDB[uid] = SynTraj(originDB[uid],1,op,bd[cluster[ulist.index(uid)]],bm[cluster[ulist.index(uid)]])
     time2 = time.time()
     cOriginDB = {}
     cSynDB = {}
@@ -71,12 +96,12 @@ def DoProcess(infile,outfile,op):
         else:
             cOriginDB[c] = d
             cSynDB[c] = sd
-    eva = np.array([0.0,0.0,0.0,0.0])
+    eva = np.array([0.0]*evanum)
     cnt = 0
     for c,d in cOriginDB.items():
         eva += np.array(Evaluation(time2-time1,d, cSynDB[c]).toList())
         cnt += 1
-    evalist.append((eva/cnt).tolist())
+    evalist.append(map(lambda x: round(x,6),(eva/cnt).tolist()))
 
     # method 2
     time3 = time.time()
@@ -93,12 +118,12 @@ def DoProcess(infile,outfile,op):
             cKSynDB[c].extend(sd)
         else:
             cKSynDB[c] = sd
-    eva = np.array([0.0,0.0,0.0,0.0])
+    eva = np.array([0.0]*evanum)
     cnt = 0
     for c,d in cOriginDB.items():
         eva += np.array(Evaluation(time4-time3,d, cKSynDB[c]).toList())
         cnt += 1
-    evalist.append((eva/cnt).tolist())
+    evalist.append(map(lambda x: round(x,6),(eva/cnt).tolist()))
     
     # method 3
     time5 = time.time()
@@ -116,12 +141,12 @@ def DoProcess(infile,outfile,op):
             cPSynDB[c].extend(sd)
         else:
             cPSynDB[c] = sd
-    eva = np.array([0.0,0.0,0.0,0.0])
+    eva = np.array([0.0]*evanum)
     cnt = 0
     for c,d in cOriginDB.items():
         eva += np.array(Evaluation(time6-time5,d, cPSynDB[c]).toList())
         cnt += 1
-    evalist.append((eva/cnt).tolist())
+    evalist.append(map(lambda x: round(x,6),(eva/cnt).tolist()))
 
     Convertor.convertTrajToFile(synDB,outfile)
     evadfc = pd.DataFrame(evalist)

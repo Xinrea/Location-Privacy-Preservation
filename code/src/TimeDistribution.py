@@ -24,10 +24,7 @@ class TimeDistribution(object):
     def addBias(self,other):
         tc = other.timeCount
         for s,t in tc.items():
-            if (s in self.timeCount):
-                self.timeCount[s].extend(t)
-            else:
-                self.timeCount[s] = t
+            self.timeCount[s] = t
 
     def sample(self, step:int):
         if (step not in self.timeCount):
