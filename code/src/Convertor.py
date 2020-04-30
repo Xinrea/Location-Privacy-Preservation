@@ -54,18 +54,22 @@ def convertGowallaToTraj(gowalla:GowallaData):
         urawData = urawData.sort_values(by=['utc'])
         # 'uid','utc','lat','lon','lid'
         lastDay = None
+        lastHour = None
         oneTraj = Trajectory()
         for i in range(len(urawData)):
             line = urawData.iloc[i]
             t = time.strptime(line['utc'],"%Y-%m-%dT%H:%M:%SZ")
             day = time.strftime("%Y-%m-%d",t)
+            hour = t.tm_hour
             if(lastDay == None):
                 lastDay = day
-            # Points in the same day -> traj
-            if(day == lastDay):
+                lastHour = hour
+            # Points in the same day and hours in 4-> traj
+            if(day == lastDay and hour - lastHour < 4):
                 oneTraj.addCoordinates(line['lat'],line['lon'],t)
             else:
                 lastDay = day
+                lastHour = hour
                 traj.append(oneTraj)
                 oneTraj = Trajectory()
                 oneTraj.addCoordinates(line['lat'],line['lon'],t)

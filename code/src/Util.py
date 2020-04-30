@@ -44,7 +44,10 @@ def extractMarkovProbs(origDBgrid:List[GridTrajectory],g:Grid,privacyBudget=1) -
     return actualCounts
 
 def perturbationMarkov(markov,bmarkov):
-    return bmarkov
+    ma = np.array(markov)
+    ba = np.array(bmarkov)
+    tbr = ba-0.1*ma
+    return tbr.tolist()
 
 def printGridTraj(gdTraj):
     for i in gdTraj:

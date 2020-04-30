@@ -5,7 +5,7 @@ from flask import Flask,render_template,request,redirect,json,send_file
 from os import path
 import hashlib
 import MainProcess
-import _thread
+import threading
 import time
 import csv
 
@@ -42,7 +42,8 @@ def index():
         fname = upload + m.hexdigest() + '.txt'
         rname = process + m.hexdigest() + '.txt'
         f.save(fname)
-        _thread.start_new_thread(MainProcess.DoProcess,(fname,rname,op))
+        threading.Thread(target=MainProcess.DoProcess,args=(fname,rname,op)).start()
+        # _thread.start_new_thread(MainProcess.DoProcess,(fname,rname,op))
         return redirect('/result?id='+m.hexdigest())
     return render_template('index.html')
 

@@ -24,7 +24,6 @@ class LengthDistribution(object):
                 self.lengthCount[name] = [t.getLength() if t.getLength() < 256 else 256]
             else:
                 self.lengthCount[name].append(t.getLength() if t.getLength() < 256 else 256)
-            
             count += 1
         if (self.maxL > 256):
             self.maxL = 256
